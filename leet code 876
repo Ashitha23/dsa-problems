@@ -1,0 +1,16 @@
+in this we are using hair and tortise
+where the steps covered by tortise is 1
+the steps covered by fast is 2
+show by taking the linked list 1,2,3,4,5
+we will insert both slow and fast at 1
+next we r shifting both of them slow is at 2,fast is at 3
+and we r shiting it again since we r having elements in this
+now slow is at 3 and fast is at 5
+further we cant move it show the point where the slow has stopped is known as the middle elemet in the given linked list
+class Solution:
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow=fast=head
+        while fast and fast.next:
+            slow=slow.next
+            fast=fast.next.next
+        return slow
