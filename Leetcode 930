@@ -1,0 +1,11 @@
+from collections import defaultdict
+class Solution:
+    def numSubarraysWithSum(self, nums: List[int], goal: int) -> int:
+        prefix=defaultdict(int)
+        prefix[0]=1
+        curr=ans=0
+        for num in nums:
+            curr+=num
+            ans+=prefix[curr-goal]
+            prefix[curr]+=1
+        return ans
