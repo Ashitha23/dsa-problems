@@ -1,0 +1,5 @@
+swaping prblm converting lower case to upper case and upper case to lower case
+input-HeLLo World
+output-hEllO wORLD
+s=input()
+print(s.swapcase())
