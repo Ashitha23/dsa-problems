@@ -1,0 +1,73 @@
+from bisect import bisect_right
+from typing import List
+
+class Solution:
+    def earliestFinishTime(
+        self,
+        landStartTime: List[int],
+        landDuration: List[int],
+        waterStartTime: List[int],
+        waterDuration: List[int]
+    ) -> int:
+
+        def best_after(starts, durations, ends):
+            rides = sorted(zip(starts, durations))
+            n = len(rides)
+
+            s = [x[0] for x in rides]
+
+            # prefix minimum duration
+            pref = [0] * n
+            pref[0] = rides[0][1]
+            for i in range(1, n):
+                pref[i] = min(pref[i - 1], rides[i][1])
+
+            # suffix minimum (start + duration)
+            suff = [0] * n
+            suff[n - 1] = rides[n - 1][0] + rides[n - 1][1]
+            for i in range(n - 2, -1, -1):
+                suff[i] = min(
+                    suff[i + 1],
+                    rides[i][0] + rides[i][1]
+                )
+
+            ans = float("inf")
+
+            for E in ends:
+                idx = bisect_right(s, E) - 1
+
+                # rides already open when we finish first ride
+                if idx >= 0:
+                    ans = min(ans, E + pref[idx])
+
+                # rides not yet open
+                if idx + 1 < n:
+                    ans = min(ans, suff[idx + 1])
+
+            return ans
+
+        land_end = [
+            landStartTime[i] + landDuration[i]
+            for i in range(len(landStartTime))
+        ]
+
+        water_end = [
+            waterStartTime[i] + waterDuration[i]
+            for i in range(len(waterStartTime))
+        ]
+
+        # Land -> Water
+        ans1 = best_after(
+            waterStartTime,
+            waterDuration,
+            land_end
+        )
+
+        # Water -> Land
+        ans2 = best_after(
+            landStartTime,
+            landDuration,
+            water_end
+        )
+
+        return min(ans1, ans2)
